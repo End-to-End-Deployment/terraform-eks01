@@ -53,6 +53,5 @@ users:
       #   - name: AWS_STS_REGIONAL_ENDPOINTS
       #     value: regional
 EOT
-  : ""
-  sensitive = true
+  : ""  # Ensure this is a valid value or expression
 }
