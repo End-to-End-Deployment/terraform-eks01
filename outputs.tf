@@ -1,16 +1,19 @@
 output "cluster_id" {
   description = "EKS cluster ID."
   value       = module.eks.cluster_id
+  condition   = module.eks.cluster_id != null
 }
 
 output "cluster_endpoint" {
   description = "Endpoint for EKS control plane."
   value       = module.eks.cluster_endpoint
+  condition   = module.eks.cluster_endpoint != null
 }
 
 output "cluster_security_group_id" {
   description = "Security group ids attached to the cluster control plane."
   value       = module.eks.cluster_security_group_id
+  condition   = module.eks.cluster_security_group_id != null
 }
 
 output "region" {
@@ -19,14 +22,25 @@ output "region" {
 }
 
 output "oidc_provider_arn" {
-  value = module.eks.oidc_provider_arn
+  value       = module.eks.oidc_provider_arn
+  condition   = module.eks.oidc_provider_arn != null
 }
 
 output "cluster_certificate_authority_data" {
-  value = module.eks.cluster_certificate_authority_data
+  value       = module.eks.cluster_certificate_authority_data
+  condition   = module.eks.cluster_certificate_authority_data != null
 }
 
 output "kubeconfig" {
+  value       = module.eks.cluster_id != null && module.eks.cluster_endpoint != null && module.eks.cluster_certificate_authority_data != null ? templatefile("${path.module}/templates/kubeconfig.tpl", {
+    cluster_endpoint                    = module.eks.cluster_endpoint,
+    cluster_certificate_authority_data  = module.eks.cluster_certificate_authority_data,
+    cluster_id                          = module.eks.cluster_id
+  }) : null
+  sensitive   = true
+}
+
+output "kubeconfig_yaml" {
   value = <<EOT
 apiVersion: v1
 clusters:
