@@ -22,8 +22,37 @@ output "oidc_provider_arn" {
   value = module.eks.oidc_provider_arn
 }
 
-#output "zz_update_kubeconfig_command" {
-  # value = "aws eks update-kubeconfig --name " + module.eks.cluster_id
-#  value = format("%s %s %s %s", "aws eks update-kubeconfig --name", module.eks.cluster_id, "--region", var.aws_region)
-#}
-
+output "kubeconfig" {
+  value = <<EOT
+apiVersion: v1
+clusters:
+- cluster:
+    server: ${module.eks.cluster_endpoint}
+    certificate-authority-data: ${module.eks.cluster_certificate_authority_data}
+  name: ${module.eks.cluster_id}
+contexts:
+- context:
+    cluster: ${module.eks.cluster_id}
+    user: aws
+  name: ${module.eks.cluster_id}
+current-context: ${module.eks.cluster_id}
+kind: Config
+preferences: {}
+users:
+- name: aws
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1alpha1
+      command: aws
+      args:
+        - eks
+        - get-token
+        - --cluster-name
+        - ${module.eks.cluster_id}
+      # Uncomment the following lines for EKS clusters on AWS GovCloud (US) or China regions
+      # env:
+      #   - name: AWS_STS_REGIONAL_ENDPOINTS
+      #     value: regional
+EOT
+  sensitive = true
+}
