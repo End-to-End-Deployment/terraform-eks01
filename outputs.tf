@@ -1,21 +1,18 @@
 output "cluster_id" {
   description = "EKS cluster ID."
   value       = module.eks.cluster_id
-  # Ensure module.eks.cluster_id is not null before setting the value
   depends_on  = [module.eks]
 }
 
 output "cluster_endpoint" {
   description = "Endpoint for EKS control plane."
   value       = module.eks.cluster_endpoint
-  # Ensure module.eks.cluster_endpoint is not null before setting the value
   depends_on  = [module.eks]
 }
 
 output "cluster_security_group_id" {
   description = "Security group ids attached to the cluster control plane."
   value       = module.eks.cluster_security_group_id
-  # Ensure module.eks.cluster_security_group_id is not null before setting the value
   depends_on  = [module.eks]
 }
 
@@ -26,13 +23,11 @@ output "region" {
 
 output "oidc_provider_arn" {
   value       = module.eks.oidc_provider_arn
-  # Ensure module.eks.oidc_provider_arn is not null before setting the value
   depends_on  = [module.eks]
 }
 
 output "cluster_certificate_authority_data" {
   value       = module.eks.cluster_certificate_authority_data
-  # Ensure module.eks.cluster_certificate_authority_data is not null before setting the value
   depends_on  = [module.eks]
 }
 
@@ -68,6 +63,6 @@ users:
       #   - name: AWS_STS_REGIONAL_ENDPOINTS
       #     value: regional
 EOT
-  : null
+  : ""
   sensitive = true
 }
