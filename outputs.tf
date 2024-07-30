@@ -22,6 +22,10 @@ output "oidc_provider_arn" {
   value = module.eks.oidc_provider_arn
 }
 
+output "cluster_certificate_authority_data" {
+  value = module.eks.cluster_certificate_authority_data
+}
+
 output "kubeconfig" {
   value = <<EOT
 apiVersion: v1
