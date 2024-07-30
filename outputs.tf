@@ -21,16 +21,6 @@ output "region" {
   value       = var.aws_region
 }
 
-output "oidc_provider_arn" {
-  value       = module.eks.oidc_provider_arn
-  depends_on  = [module.eks]
-}
-
-output "cluster_certificate_authority_data" {
-  value       = module.eks.cluster_certificate_authority_data
-  depends_on  = [module.eks]
-}
-
 output "kubeconfig" {
   value = module.eks.cluster_id != null && module.eks.cluster_endpoint != null && module.eks.cluster_certificate_authority_data != null ? <<EOT
 apiVersion: v1
