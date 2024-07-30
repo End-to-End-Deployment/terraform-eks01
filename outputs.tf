@@ -1,19 +1,22 @@
 output "cluster_id" {
   description = "EKS cluster ID."
   value       = module.eks.cluster_id
-  condition   = module.eks.cluster_id != null
+  # Ensure module.eks.cluster_id is not null before setting the value
+  depends_on  = [module.eks]
 }
 
 output "cluster_endpoint" {
   description = "Endpoint for EKS control plane."
   value       = module.eks.cluster_endpoint
-  condition   = module.eks.cluster_endpoint != null
+  # Ensure module.eks.cluster_endpoint is not null before setting the value
+  depends_on  = [module.eks]
 }
 
 output "cluster_security_group_id" {
   description = "Security group ids attached to the cluster control plane."
   value       = module.eks.cluster_security_group_id
-  condition   = module.eks.cluster_security_group_id != null
+  # Ensure module.eks.cluster_security_group_id is not null before setting the value
+  depends_on  = [module.eks]
 }
 
 output "region" {
@@ -23,25 +26,18 @@ output "region" {
 
 output "oidc_provider_arn" {
   value       = module.eks.oidc_provider_arn
-  condition   = module.eks.oidc_provider_arn != null
+  # Ensure module.eks.oidc_provider_arn is not null before setting the value
+  depends_on  = [module.eks]
 }
 
 output "cluster_certificate_authority_data" {
   value       = module.eks.cluster_certificate_authority_data
-  condition   = module.eks.cluster_certificate_authority_data != null
+  # Ensure module.eks.cluster_certificate_authority_data is not null before setting the value
+  depends_on  = [module.eks]
 }
 
 output "kubeconfig" {
-  value       = module.eks.cluster_id != null && module.eks.cluster_endpoint != null && module.eks.cluster_certificate_authority_data != null ? templatefile("${path.module}/templates/kubeconfig.tpl", {
-    cluster_endpoint                    = module.eks.cluster_endpoint,
-    cluster_certificate_authority_data  = module.eks.cluster_certificate_authority_data,
-    cluster_id                          = module.eks.cluster_id
-  }) : null
-  sensitive   = true
-}
-
-output "kubeconfig_yaml" {
-  value = <<EOT
+  value = module.eks.cluster_id != null && module.eks.cluster_endpoint != null && module.eks.cluster_certificate_authority_data != null ? <<EOT
 apiVersion: v1
 clusters:
 - cluster:
@@ -72,5 +68,6 @@ users:
       #   - name: AWS_STS_REGIONAL_ENDPOINTS
       #     value: regional
 EOT
+  : null
   sensitive = true
 }
