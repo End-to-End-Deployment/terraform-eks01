@@ -1,3 +1,26 @@
+output "cluster_id" {
+  description = "EKS cluster ID."
+  value       = module.eks.cluster_id
+  depends_on  = [module.eks]
+}
+
+output "cluster_endpoint" {
+  description = "Endpoint for EKS control plane."
+  value       = module.eks.cluster_endpoint
+  depends_on  = [module.eks]
+}
+
+output "cluster_security_group_id" {
+  description = "Security group ids attached to the cluster control plane."
+  value       = module.eks.cluster_security_group_id
+  depends_on  = [module.eks]
+}
+
+output "region" {
+  description = "AWS region"
+  value       = var.aws_region
+}
+
 output "kubeconfig" {
   value = module.eks.cluster_id != null && module.eks.cluster_endpoint != null && module.eks.cluster_certificate_authority_data != null ? <<EOT
 apiVersion: v1
@@ -30,5 +53,5 @@ users:
       #   - name: AWS_STS_REGIONAL_ENDPOINTS
       #     value: regional
 EOT
-  : "kubeconfig not available due to missing module output values."
+: "kubeconfig not available due to missing module output values."
 }
