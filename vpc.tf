@@ -1,17 +1,9 @@
 
-#provider "aws" {
-  #region = var.aws_region
-#}
+provider "aws" {
+  region = var.aws_region
+}
 
 data "aws_availability_zones" "available" {}
-
-data "aws_eks_cluster" "cluster" {
-  name = module.eks.cluster_name
-}
-
-data "aws_eks_cluster_auth" "cluster_auth" {
-  name = module.eks.cluster_name
-}
 
 locals {
   cluster_name = "abhi-eks-${random_string.suffix.result}"
@@ -50,3 +42,4 @@ module "vpc" {
     "kubernetes.io/role/internal-elb"             = "1"
   }
 }
+
